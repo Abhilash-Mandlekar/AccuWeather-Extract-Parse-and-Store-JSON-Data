@@ -21,17 +21,37 @@ Please run the requirements.txt to install the above dependancies as follows:
 
 ## Run:
 
-Use either python or python3 command to run the weather.py file. This will forcast the weather data for next five days.
+Use either python or python3 command to run the weather.py file. 
+
+The following command will forcast the weather data for next five days.
 
 #### e.g. python3 weather.py
+
+We can specify the postal code as command line argument to get the forecast of that postal code.
+
+#### e.g. python3 weather.py --p 20190
+
+We can optionally provide the command line argument to get the current weather of Reston.
+
+#### e.g. python3 weather.py --c curr
+
+We can also specify the outfile name through command line.
+
+#### e.g. python3 weather.py --p 20190 --o reston_weather.json
+
+The program can run with all the arguments giving the current weather of postal code and outputting the json of given name.
+
+#### e.g. python3 weather.py --c curr --p 20190 --o reston_curr_weather.json
+
 
 We can optionally provide the command line argument to get the current weather of Reston.
 
 #### e.g. python3 weather.py --c curr
 
 The file test.py contains the test cases that tests the weather.py.
+
 Note: This takes the input as json file in one of the test case. The path of the file may needs to be updated.
 
 #### e.g. python3 test.py
 
-Samples of raw data and processed data can be found in "Sample" folder.
+#### Note: Samples of raw data and processed data can be found in "Sample" folder.
