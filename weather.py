@@ -5,7 +5,6 @@ import requests
 import ujson
 
 API_KEY = "Rp2qWkX61A3iqGmjJrKMmunR8xgnzTpM"  #"94lw2xFLTQ5cdPGRH2OuGii2G2zp4NwN"
-#LOCATION_KEY = "341249"
 OUTFILE_NAME = "reston_weather.json"
 POSTAL_CODE = "20190"
 
@@ -26,8 +25,7 @@ class AccuWeatherReston:
             
         else:
             """ bad request, 401 , 404 server errors"""
-            print("Bad request")
-            raise raise_for_status()
+            sys.exit("Bad request")
             
        
     def get(self, url):
@@ -40,16 +38,16 @@ class AccuWeatherReston:
                 raw_data = ujson.loads(response.text)
                                 
         except requests.ConnectionError:
-            print("ConnectionError")
+            sys.exit("Connection error")
             
         except requests.exceptions.HTTPError as err:
-            print("")
+            sys.exit("HTTPError or server error")
         
         return raw_data
                 
     
     def nextFiveDayData(self):
-        """ Calls the Accu weather API to get the raw weather data for last 5 days"""
+        """ Calls the Accu weather API to get the raw weather data for next 5 days"""
 
         return self.get(f"http://dataservice.accuweather.com/forecasts/v1/daily/5day/{self.location_key}?apikey={self.key}&amp;details=false")
             
@@ -61,7 +59,7 @@ class AccuWeatherReston:
         
         
     def cleanDataFiveDay(self, raw_data):
-        """ cleans the data for next 5 days and only takes important fields from json """
+        """ cleans the data for next 5 days and only takes important fields  """
         
         cleaned_data = {'DailyForecasts': []}
         
@@ -84,7 +82,7 @@ class AccuWeatherReston:
     
     
     def cleanCurrWeatherData(self, raw_data):
-        """ cleans the data for next 5 days and only takes important fields from json """
+        """ extract important fields from current weather """
         
         cleaned_data = {'CurrentWeather': []}
         
@@ -115,20 +113,29 @@ class AccuWeatherReston:
 
 if __name__ == "__main__":
     
-    parser = argparse.ArgumentParser(description='Calls API for weather data')
-    parser.add_argument("--c", 
-        help="pass 'curr' for current weather or pass 'fivedays' for last five days weather")
+    parser = argparse.ArgumentParser(description='Optional arguments')
+    
+    parser.add_argument("--c", type = str,
+        help="pass 'curr' for current weather ")
+        
+    parser.add_argument("--p", type = int,
+        help="pass postal code (integer) to get the weather data for specified postal code",
+        default = "20190")
+    
+    parser.add_argument("--o", type = str,
+        help="pass output file name for json e.g. reston_weather.json",
+        default = "reston_weather.json")
         
     args = parser.parse_args()
     #print(args.c)
     if (args.c == 'curr'):
-        j = AccuWeatherReston()
+        j = AccuWeatherReston(postal_code = args.p, outfile_name = args.o)
         curr_day_data = j.currData()
         print(curr_day_data)    
         j.cleanCurrWeatherData(curr_day_data)
-        
+    
     else:
-        j = AccuWeatherReston()
+        j = AccuWeatherReston(postal_code = args.p, outfile_name = args.o)
         five_day_data = j.nextFiveDayData()
         print(five_day_data)    
         j.cleanDataFiveDay(five_day_data)
