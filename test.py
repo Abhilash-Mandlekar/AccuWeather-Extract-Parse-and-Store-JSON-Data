@@ -3,30 +3,6 @@ import ujson
 import time
 from weather import AccuWeatherReston, BadRequestException
 
-"""
-class TestAccuWeatherReston(unittest.TestCase):
-
-    def setUp(self) -> None:
-        
-        self.path = "reston_weather.json"
-        self
-    def test_readjson(self):
-        
-        start = time.time()
-        with open(self.path, 'r') as infile:
-            jobj = ujson.load(infile)
-            for item in jobj['DailyForecasts']:
-                print(item['Date'])
-                print(item['Temperature'])
-                print(item['Day'])
-                print(item['Night'])
-        print("Total time taken to read and process json:", time.time() - start)    
-            
-    def test_A():
-        
-if __name__ == '__main__':
-    unittest.main()
-    """
     
 def test_current_weather_data():
     """ tests the current weather data and json validation """
