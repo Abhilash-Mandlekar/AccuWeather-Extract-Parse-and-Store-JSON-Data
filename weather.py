@@ -4,9 +4,15 @@ import argparse
 import requests
 import ujson
 
-API_KEY = "Rp2qWkX61A3iqGmjJrKMmunR8xgnzTpM"  #"94lw2xFLTQ5cdPGRH2OuGii2G2zp4NwN"
+API_KEY =  "B3KVOMGztj4Gb0xdcJmaGfbPQgxRCbPS" #"Rp2qWkX61A3iqGmjJrKMmunR8xgnzTpM" #"94lw2xFLTQ5cdPGRH2OuGii2G2zp4NwN"
 OUTFILE_NAME = "reston_weather.json"
 POSTAL_CODE = "20190"
+
+
+class BadRequestException(Exception):
+    
+    def __init__(self):
+        super().__init__("Bad request")
 
 class AccuWeatherReston:
     """ Gets the weather data for reston using AccuWeather API. The location key for Reston is 341249 """
@@ -15,17 +21,20 @@ class AccuWeatherReston:
         self.key = key
         self.postal_code = postal_code
         self.outfile_name = outfile_name
-        url = f"http://dataservice.accuweather.com/locations/v1/postalcodes/search?apikey=Rp2qWkX61A3iqGmjJrKMmunR8xgnzTpM&q={self.postal_code}&language=en-us&details=false"
+        url = f"http://dataservice.accuweather.com/locations/v1/postalcodes/search?apikey={self.key}&q={self.postal_code}&language=en-us&details=false"
         response = requests.get(url)
-        
         # check if the response is OK else raise an exception
         if response.status_code == 200:
             raw_data = ujson.loads(response.text)
+            if len(raw_data) == 0:
+                raise BadRequestException()
             self.location_key = raw_data[0]["Key"]
             
         else:
+            print("*****Status code", response.status_code)
             """ bad request, 401 , 404 server errors"""
             sys.exit("Bad request")
+            raise BadRequestException()
             
        
     def get(self, url):
@@ -58,8 +67,8 @@ class AccuWeatherReston:
         return self.get(f"http://dataservice.accuweather.com/currentconditions/v1/{self.location_key}?apikey={self.key}&amp;details=false")
         
         
-    def cleanDataFiveDay(self, raw_data):
-        """ cleans the data for next 5 days and only takes important fields  """
+    def cleanAndStoreDataFiveDay(self, raw_data):
+        """ cleans and stores the data for next 5 days and only takes important fields  """
         
         cleaned_data = {'DailyForecasts': []}
         
@@ -81,8 +90,8 @@ class AccuWeatherReston:
         self.jsonDump(cleaned_data)
     
     
-    def cleanCurrWeatherData(self, raw_data):
-        """ extract important fields from current weather """
+    def cleanAndStoreCurrWeatherData(self, raw_data):
+        """ extracts and stores important fields from current weather """
         
         cleaned_data = {'CurrentWeather': []}
         
@@ -132,10 +141,10 @@ if __name__ == "__main__":
         j = AccuWeatherReston(postal_code = args.p, outfile_name = args.o)
         curr_day_data = j.currData()
         print(curr_day_data)    
-        j.cleanCurrWeatherData(curr_day_data)
+        j.cleanAndStoreCurrWeatherData(curr_day_data)
     
     else:
         j = AccuWeatherReston(postal_code = args.p, outfile_name = args.o)
         five_day_data = j.nextFiveDayData()
         print(five_day_data)    
-        j.cleanDataFiveDay(five_day_data)
+        j.cleanAndStoreDataFiveDay(five_day_data)
