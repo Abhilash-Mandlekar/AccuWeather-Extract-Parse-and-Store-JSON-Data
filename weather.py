@@ -33,7 +33,6 @@ class AccuWeatherReston:
         else:
             print("*****Status code", response.status_code)
             """ bad request, 401 , 404 server errors"""
-            sys.exit("Bad request")
             raise BadRequestException()
             
        
@@ -47,10 +46,10 @@ class AccuWeatherReston:
                 raw_data = ujson.loads(response.text)
                                 
         except requests.ConnectionError:
-            sys.exit("Connection error")
+            raise BadRequestException()
             
         except requests.exceptions.HTTPError as err:
-            sys.exit("HTTPError or server error")
+            raise BadRequestException()
         
         return raw_data
                 
