@@ -52,6 +52,6 @@ The file test.py contains the test cases that tests the weather.py.
 
 Note: This takes the input as json file in one of the test case. The path of the file may needs to be updated.
 
-#### e.g. python test.py
+#### e.g. pytest test.py
 
 #### Note: Samples of raw data and processed data can be found in "Sample" folder.
