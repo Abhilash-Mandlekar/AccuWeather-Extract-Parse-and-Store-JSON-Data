@@ -4,7 +4,7 @@ import argparse
 import requests
 import ujson
 
-API_KEY =  "B3KVOMGztj4Gb0xdcJmaGfbPQgxRCbPS" #"Rp2qWkX61A3iqGmjJrKMmunR8xgnzTpM" #"94lw2xFLTQ5cdPGRH2OuGii2G2zp4NwN"
+API_KEY =  {#Use your own API KEY}
 OUTFILE_NAME = "reston_weather.json"
 POSTAL_CODE = "20190"
 
