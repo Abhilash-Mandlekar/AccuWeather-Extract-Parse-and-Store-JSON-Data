@@ -20,7 +20,9 @@ def test_current_weather_data():
         assert 'LocalObservationDateTime' in item[0]
         assert 'Temperature' in item[0]
         assert 'WeatherText' in item[0]
- 
+    output.close()
+
+    
 def test_five_day_weather_data():
     """ tests the next five days weather data and json validation """
     j = AccuWeatherReston(postal_code = "20190", outfile_name = "test.json")
@@ -37,7 +39,9 @@ def test_five_day_weather_data():
             assert 'Temperature' in item
             assert 'Day' in item
             assert 'Night' in item
-        
+    output.close()
+ 
+
 def test_bad_postal_code():
     with pytest.raises(BadRequestException):
         j = AccuWeatherReston(postal_code = "", outfile_name = "test.json")
