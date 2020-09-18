@@ -114,6 +114,7 @@ class AccuWeatherReston:
         ujson.dumps(json_data)
         with open(self.outfile_name, 'w') as outfile:
             ujson.dump(json_data, outfile)
+        outfile.close()
         print("File created")
     
     
